@@ -11,14 +11,23 @@ public class simpleRequests : MonoBehaviour
     [SerializeField]
     TMP_Text texto;
     [SerializeField]
-    List<Persona> personas ;
+    List<Persona> personas;
     void Start()
     {
         // A correct website page.
-        StartCoroutine(GetRequest("https://script.google.com/macros/s/AKfycbyHDY-TKrvoCYniAy-syFSYFDEH8P2OHwAw3OCzovmozuSioNy_B9BVcCraf0S_F0Vh3w/exec"));
+        StartCoroutine(GetRequest("https://script.google.com/macros/s/AKfycbxQEfUWoUu0gNcGUyJVkmCPRaqxWz30doEldNUCX6FMgkRqNRmX-XUuBIu2WE2VN3MN/exec"));
 
         // A non-existing page.
         //StartCoroutine(GetRequest("https://error.html"));
+    }
+
+    public void DoRequest()
+    {
+        //stopping coroutine before starting it again
+        StopAllCoroutines();
+        //A correct website page.
+        StartCoroutine(GetRequest("https://script.google.com/macros/s/AKfycbxQEfUWoUu0gNcGUyJVkmCPRaqxWz30doEldNUCX6FMgkRqNRmX-XUuBIu2WE2VN3MN/exec"));
+
     }
    
     IEnumerator GetRequest(string uri)
@@ -27,6 +36,7 @@ public class simpleRequests : MonoBehaviour
         {
             // Request and wait for the desired page.
             yield return webRequest.SendWebRequest();
+            Debug.Log("Sending Request");
             string[] pages = uri.Split('/');
             int page = pages.Length - 1;
 
@@ -43,24 +53,34 @@ public class simpleRequests : MonoBehaviour
                     texto.text = webRequest.downloadHandler.text;
                     Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
                     JSONNode root = JSONNode.Parse(webRequest.downloadHandler.text);
-                    foreach(var obj in root["content"]){
-                        Debug.Log(obj.Key);
-                        Persona a = ScriptableObject.CreateInstance<Persona>();
-                        foreach(var token in root["content"][obj.Key])
-                        {
-                            Debug.Log(token.Value["edad"]);
-                            a.name = obj.Key;
-                            a.nombre = obj.Key;
-                            a.edad = token.Value["edad"];
-                            a.color = token.Value["color"];
-                            a.email = token.Value["email"];
-                            a.comidas = token.Value["comidas"];
-                            AssetDatabase.CreateAsset(a, "Assets/Personas/"+a.name+".asset");
-                            personas.Add(a);
-                                                        
-                        }
 
+                    //
+                    foreach(var key in root.Keys)
+                    {
+                        Debug.Log(root[key][0]);
+                        foreach(var pareja in root[key][0])
+                        {
+                            Debug.Log(pareja.Key);
+                            Debug.Log(pareja.Value);
+                        }
                     }
+                    // Code that parsed data from api test google sheet
+                    // foreach(var obj in root["Juan"]){
+                        // Debug.Log(obj.Key);
+                        // Persona a = ScriptableObject.CreateInstance<Persona>();
+                        // foreach(var token in root["content"][obj.Key])
+                        // {
+                        //     Debug.Log(token.Value["edad"]);
+                        //     a.name = obj.Key;
+                        //     a.nombre = obj.Key;
+                        //     a.edad = token.Value["edad"];
+                        //     a.color = token.Value["color"];
+                        //     a.email = token.Value["email"];
+                        //     a.comidas = token.Value["comidas"];
+                        //     AssetDatabase.CreateAsset(a, "Assets/Personas/"+a.name+".asset");
+                        //     personas.Add(a);                              
+                        //}
+                        //}
 
                     break;
             }
