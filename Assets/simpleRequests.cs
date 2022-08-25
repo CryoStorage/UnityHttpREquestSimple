@@ -8,14 +8,16 @@ using TMPro;
 
 public class simpleRequests : MonoBehaviour
 {
-    [SerializeField]
-    TMP_Text texto;
-    [SerializeField]
-    List<Persona> personas;
+    [SerializeField] TMP_Text texto;
+    [SerializeField] TMP_InputField searchInput;
+    [SerializeField] List<Persona> personas;
+
+    private string toSearch;
     void Start()
     {
         // A correct website page.
-        StartCoroutine(GetRequest("https://script.google.com/macros/s/AKfycbxQEfUWoUu0gNcGUyJVkmCPRaqxWz30doEldNUCX6FMgkRqNRmX-XUuBIu2WE2VN3MN/exec"));
+        // StartCoroutine(GetRequest("https://script.google.com/macros/s/AKfycbxQEfUWoUu0gNcGUyJVkmCPRaqxWz30doEldNUCX6FMgkRqNRmX-XUuBIu2WE2VN3MN/exec"));
+        StartCoroutine(GetRequest("https://pokeapi.co/api/v2/pokemon/" + toSearch));
 
         // A non-existing page.
         //StartCoroutine(GetRequest("https://error.html"));
@@ -26,7 +28,9 @@ public class simpleRequests : MonoBehaviour
         //stopping coroutine before starting it again
         StopAllCoroutines();
         //A correct website page.
-        StartCoroutine(GetRequest("https://script.google.com/macros/s/AKfycbxQEfUWoUu0gNcGUyJVkmCPRaqxWz30doEldNUCX6FMgkRqNRmX-XUuBIu2WE2VN3MN/exec"));
+        // StartCoroutine(GetRequest("https://script.google.com/macros/s/AKfycbxQEfUWoUu0gNcGUyJVkmCPRaqxWz30doEldNUCX6FMgkRqNRmX-XUuBIu2WE2VN3MN/exec"));
+        toSearch = searchInput.text;
+        StartCoroutine(GetRequest("https://pokeapi.co/api/v2/pokemon/" + toSearch));
 
     }
    
@@ -54,34 +58,12 @@ public class simpleRequests : MonoBehaviour
                     Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
                     JSONNode root = JSONNode.Parse(webRequest.downloadHandler.text);
 
-                    //
-                    foreach(var key in root.Keys)
+                    foreach (var key in root.Keys)
                     {
-                        Debug.Log(root[key][0]);
-                        foreach(var pareja in root[key][0])
-                        {
-                            Debug.Log(pareja.Key);
-                            Debug.Log(pareja.Value);
-                        }
+                        int num = 0;
+                        Debug.Log(num);
+                        num++;
                     }
-                    // Code that parsed data from api test google sheet
-                    // foreach(var obj in root["Juan"]){
-                        // Debug.Log(obj.Key);
-                        // Persona a = ScriptableObject.CreateInstance<Persona>();
-                        // foreach(var token in root["content"][obj.Key])
-                        // {
-                        //     Debug.Log(token.Value["edad"]);
-                        //     a.name = obj.Key;
-                        //     a.nombre = obj.Key;
-                        //     a.edad = token.Value["edad"];
-                        //     a.color = token.Value["color"];
-                        //     a.email = token.Value["email"];
-                        //     a.comidas = token.Value["comidas"];
-                        //     AssetDatabase.CreateAsset(a, "Assets/Personas/"+a.name+".asset");
-                        //     personas.Add(a);                              
-                        //}
-                        //}
-
                     break;
             }
         }
