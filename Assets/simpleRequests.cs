@@ -17,7 +17,7 @@ public class simpleRequests : MonoBehaviour
     {
         // A correct website page.
         // StartCoroutine(GetRequest("https://script.google.com/macros/s/AKfycbxQEfUWoUu0gNcGUyJVkmCPRaqxWz30doEldNUCX6FMgkRqNRmX-XUuBIu2WE2VN3MN/exec"));
-        StartCoroutine(GetRequest("https://pokeapi.co/api/v2/pokemon/" + toSearch));
+        StartCoroutine(GetRequest("https://pokeapi.co/api/v2/pokemon/" + Random.Range(1,1154).ToString()));
 
         // A non-existing page.
         //StartCoroutine(GetRequest("https://error.html"));
@@ -33,7 +33,6 @@ public class simpleRequests : MonoBehaviour
         StartCoroutine(GetRequest("https://pokeapi.co/api/v2/pokemon/" + toSearch));
 
     }
-   
     IEnumerator GetRequest(string uri)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
@@ -57,12 +56,11 @@ public class simpleRequests : MonoBehaviour
                     texto.text = webRequest.downloadHandler.text;
                     Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
                     JSONNode root = JSONNode.Parse(webRequest.downloadHandler.text);
-
-                    foreach (var key in root.Keys)
+                    
+                    foreach (var ability in root["abilities"])
                     {
-                        int num = 0;
-                        Debug.Log(num);
-                        num++;
+                        //Debug.Log(ability["name"]);
+
                     }
                     break;
             }
