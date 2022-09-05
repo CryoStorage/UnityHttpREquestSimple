@@ -27,7 +27,8 @@ public class simpleRequests : MonoBehaviour
     {
         // A correct website page.
         // StartCoroutine(GetRequest("https://script.google.com/macros/s/AKfycbxQEfUWoUu0gNcGUyJVkmCPRaqxWz30doEldNUCX6FMgkRqNRmX-XUuBIu2WE2VN3MN/exec"));
-        randomId = Random.Range(1,905);
+        //randomId = Random.Range(1,905);
+        randomId = Random.Range(1,895);
         StartCoroutine(GetRequest("https://pokeapi.co/api/v2/pokemon/" + randomId.ToString()));
 
         // A non-existing page.
@@ -96,7 +97,7 @@ public class simpleRequests : MonoBehaviour
                     tmp_pHeight.text = root["height"];
                     tmp_pWeight.text = root["weight"];
                     tmp_pType1.text = root["types"][0]["type"]["name"];
-                    tmp_pType1.text = root["types"][1]["type"]["name"];
+                    tmp_pType2.text = root["types"][1]["type"]["name"];
                     tmp_pIndex.text = root["id"];
                     string imageURL = root["sprites"]["other"]["official-artwork"]["front_default"];
 
