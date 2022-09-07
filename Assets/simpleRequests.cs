@@ -13,6 +13,9 @@ public class simpleRequests : MonoBehaviour
     [SerializeField] TMP_Text tmp_pIndex;
     [SerializeField] TMP_Text tmp_pType1;
     [SerializeField] TMP_Text tmp_pType2;
+    Color[] colors;
+    [SerializeField] RawImage typeBg1;
+    [SerializeField] RawImage typeBg2;
     [SerializeField] TMP_Text tmp_pHeight;
     [SerializeField] TMP_Text tmp_pWeight;
     [SerializeField] RawImage pSprite;
@@ -28,6 +31,26 @@ public class simpleRequests : MonoBehaviour
         // A correct website page.
         // StartCoroutine(GetRequest("https://script.google.com/macros/s/AKfycbxQEfUWoUu0gNcGUyJVkmCPRaqxWz30doEldNUCX6FMgkRqNRmX-XUuBIu2WE2VN3MN/exec"));
         //randomId = Random.Range(1,905);
+        
+        Color normal = new Color(168, 168, 120);
+        Color fire = new Color(240, 128, 48);
+        Color fighting = new Color(192, 48, 40);
+        Color water = new Color(104, 144, 240);
+        Color flying = new Color(168, 144, 240);
+        Color grass = new Color(120, 200, 80);
+        Color poison = new Color(160, 64, 160);
+        Color electric = new Color(248, 208, 48);
+        Color ground = new Color(224, 192, 104);
+        Color psychic = new Color(248, 88, 136);
+        Color rock = new Color(184, 160, 56);
+        Color ice = new Color(152, 216, 216);
+        Color bug = new Color(168, 184, 32);
+        Color dragon = new Color(112, 56, 248);
+        Color ghost = new Color(112, 88, 152);
+        Color steel = new Color(184, 184, 208);
+        Color fairy = new Color(238, 153, 172);
+        colors = new Color[]{normal,fire,fighting,water,flying,grass,poison,electric,ground,psychic,rock,ice,bug,dragon,ghost,steel,fairy};
+
         randomId = Random.Range(1,895);
         StartCoroutine(GetRequest("https://pokeapi.co/api/v2/pokemon/" + randomId.ToString()));
 
@@ -96,11 +119,72 @@ public class simpleRequests : MonoBehaviour
                     tmp_pName.text = root["name"];
                     tmp_pHeight.text = root["height"];
                     tmp_pWeight.text = root["weight"];
-                    tmp_pType1.text = root["types"][0]["type"]["name"];
-                    tmp_pType2.text = root["types"][1]["type"]["name"];
+                    string stringType1 = root["types"][0]["type"]["name"];
+                    tmp_pType1.text = stringType1;
+                    string stringType2 = root["types"][1]["type"]["name"];
+                    tmp_pType2.text = stringType2;
+                    
                     tmp_pIndex.text = root["id"];
                     string imageURL = root["sprites"]["other"]["official-artwork"]["front_default"];
 
+                    // switch(stringType1, stringType2)
+                    // {
+                    //     case "normal":
+                        
+                    //     break;
+                    //     case "fire":
+
+                    //     break;
+                    //     case "fighting":
+
+                    //     break;
+                    //     case "water":
+
+                    //     break;
+                    //     case "flying":
+
+                    //     break;
+                    //     case "grass":
+
+                    //     break;
+                    //     case "poison":
+
+                    //     break;
+                    //     case "electric":
+
+                    //     break;
+                    //     case "ground":
+
+                    //     break;
+                    //     case "psychic":
+
+                    //     break;
+                    //     case "rock":
+
+                    //     break;
+                    //     case "ice":
+
+                    //     break;
+                    //     case "bug":
+
+                    //     break;
+                    //     case "dragon":
+                        
+                    //     break;
+                    //     case "ghost":
+
+                    //     break;
+                    //     case "steel":
+
+                    //     break;
+                    //     case "fairy":
+
+                    //     break;
+
+                    //     default:
+
+                    //     break;   
+                    // }
                     UnityWebRequest imgRequest = UnityWebRequestTexture.GetTexture(imageURL);
                     yield return imgRequest.SendWebRequest();
                     
