@@ -77,7 +77,7 @@ public class simpleRequests : MonoBehaviour
 
         StopAllCoroutines();
         toSearch = searchInput.text;
-        StartCoroutine(GetRequest("https://pokeapi.co/api/v2/pokemon/" + toSearch));
+        StartCoroutine(GetRequest("https://pokeapi.co/api/v2/pokemon/" + toSearch.ToLower()));
 
     }
 
@@ -121,11 +121,96 @@ public class simpleRequests : MonoBehaviour
                     tmp_pWeight.text = root["weight"];
                     string stringType1 = root["types"][0]["type"]["name"];
                     tmp_pType1.text = stringType1;
+                    Debug.Log (stringType1);
                     string stringType2 = root["types"][1]["type"]["name"];
                     tmp_pType2.text = stringType2;
                     
                     tmp_pIndex.text = root["id"];
                     string imageURL = root["sprites"]["other"]["official-artwork"]["front_default"];
+
+                    RawImage[] bgRawImages = new RawImage[]{typeBg1,typeBg2};
+                    string[] typeStrings = new string[]{stringType1,stringType2};
+
+                    // colors = new Color[]{normal,fire,fighting,water,flying,grass,poison,electric,ground,psychic,rock,ice,bug,dragon,ghost,steel,fairy};
+                    for (int i = 0; i < bgRawImages.Length ; i++)
+                    {
+                        switch(typeStrings[i])
+                        {
+                            case "normal":
+                            bgRawImages[i].color = colors[0] ;
+                            Debug.Log("typeisnormal");
+                            
+                            break;
+                            case "fire":
+                            bgRawImages[i].color = colors[1];
+
+                            break;
+                            case "fighting":
+                            bgRawImages[i].color = colors[2];
+
+                            break;
+                            case "water":
+                            bgRawImages[i].color = colors[3];
+
+                            break;
+                            case "flying":
+                            bgRawImages[i].color = colors[4];
+
+                            break;
+                            case "grass":
+                            bgRawImages[i].color = colors[5];
+
+                            break;
+                            case "poison":
+                            bgRawImages[i].color = colors[6];
+
+                            break;
+                            case "electric":
+                            bgRawImages[i].color = colors[7];
+
+                            break;
+                            case "ground":
+                            bgRawImages[i].color = colors[8];
+
+                            break;
+                            case "psychic":
+                            bgRawImages[i].color = colors[9];
+
+                            break;
+                            case "rock":
+                            bgRawImages[i].color = colors[10];
+
+                            break;
+                            case "ice":
+                            bgRawImages[i].color = colors[11];
+
+                            break;
+                            case "bug":
+                            bgRawImages[i].color = colors[12];
+
+                            break;
+                            case "dragon":
+                            bgRawImages[i].color = colors[13];
+                            
+                            break;
+                            case "ghost":
+                            bgRawImages[i].color = colors[14];
+
+                            break;
+                            case "steel":
+                            bgRawImages[i].color = colors[15];
+
+                            break;
+                            case "fairy":
+                            bgRawImages[i].color = colors[16];
+                            break;
+
+                            default:
+                            bgRawImages[i].color = Color.magenta;
+
+                            break;   
+                        }
+                    }
 
                     // switch(stringType1, stringType2)
                     // {
