@@ -28,6 +28,7 @@ public class simpleRequests : MonoBehaviour
     private string toSearch;
     void Start()
     {
+        Application.targetFrameRate = 60;
         // A correct website page.
         // StartCoroutine(GetRequest("https://script.google.com/macros/s/AKfycbxQEfUWoUu0gNcGUyJVkmCPRaqxWz30doEldNUCX6FMgkRqNRmX-XUuBIu2WE2VN3MN/exec"));
         //randomId = Random.Range(1,905);
@@ -46,10 +47,11 @@ public class simpleRequests : MonoBehaviour
         Color ice = new Color(152, 216, 216);
         Color bug = new Color(168, 184, 32);
         Color dragon = new Color(112, 56, 248);
+        Color dark = new Color(112, 88, 72);
         Color ghost = new Color(112, 88, 152);
         Color steel = new Color(184, 184, 208);
         Color fairy = new Color(238, 153, 172);
-        colors = new Color[]{normal,fire,fighting,water,flying,grass,poison,electric,ground,psychic,rock,ice,bug,dragon,ghost,steel,fairy};
+        colors = new Color[]{normal,fire,fighting,water,flying,grass,poison,electric,ground,psychic,rock,ice,bug,dragon,ghost,dark,steel,fairy};
 
         randomId = Random.Range(1,895);
         StartCoroutine(GetRequest("https://pokeapi.co/api/v2/pokemon/" + randomId.ToString()));
@@ -131,7 +133,6 @@ public class simpleRequests : MonoBehaviour
                     RawImage[] bgRawImages = new RawImage[]{typeBg1,typeBg2};
                     string[] typeStrings = new string[]{stringType1,stringType2};
 
-                    // colors = new Color[]{normal,fire,fighting,water,flying,grass,poison,electric,ground,psychic,rock,ice,bug,dragon,ghost,steel,fairy};
                     for (int i = 0; i < bgRawImages.Length ; i++)
                     {
                         switch(typeStrings[i])
@@ -197,79 +198,26 @@ public class simpleRequests : MonoBehaviour
                             bgRawImages[i].color = colors[14];
 
                             break;
-                            case "steel":
+                            case "dark":
                             bgRawImages[i].color = colors[15];
 
                             break;
-                            case "fairy":
+                            case "steel":
                             bgRawImages[i].color = colors[16];
+
+                            break;
+                            case "fairy":
+                            bgRawImages[i].color = colors[17];
                             break;
 
                             default:
-                            bgRawImages[i].color = Color.magenta;
+                            Color transparent = new Color(1,1,1,0);
+                            bgRawImages[i].color = transparent;
 
                             break;   
                         }
                     }
-
-                    // switch(stringType1, stringType2)
-                    // {
-                    //     case "normal":
-                        
-                    //     break;
-                    //     case "fire":
-
-                    //     break;
-                    //     case "fighting":
-
-                    //     break;
-                    //     case "water":
-
-                    //     break;
-                    //     case "flying":
-
-                    //     break;
-                    //     case "grass":
-
-                    //     break;
-                    //     case "poison":
-
-                    //     break;
-                    //     case "electric":
-
-                    //     break;
-                    //     case "ground":
-
-                    //     break;
-                    //     case "psychic":
-
-                    //     break;
-                    //     case "rock":
-
-                    //     break;
-                    //     case "ice":
-
-                    //     break;
-                    //     case "bug":
-
-                    //     break;
-                    //     case "dragon":
-                        
-                    //     break;
-                    //     case "ghost":
-
-                    //     break;
-                    //     case "steel":
-
-                    //     break;
-                    //     case "fairy":
-
-                    //     break;
-
-                    //     default:
-
-                    //     break;   
-                    // }
+                    
                     UnityWebRequest imgRequest = UnityWebRequestTexture.GetTexture(imageURL);
                     yield return imgRequest.SendWebRequest();
                     
