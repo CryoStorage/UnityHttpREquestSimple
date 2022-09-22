@@ -21,7 +21,6 @@ public class simpleRequests : MonoBehaviour
     [SerializeField] RawImage pSprite;
     Texture pTexture;
     [SerializeField] TMP_InputField searchInput;
-    [SerializeField] List<Persona> personas;
 
     int randomId;
 
@@ -91,8 +90,6 @@ public class simpleRequests : MonoBehaviour
         // StartCoroutine(GetRequest("https://script.google.com/macros/s/AKfycbxQEfUWoUu0gNcGUyJVkmCPRaqxWz30doEldNUCX6FMgkRqNRmX-XUuBIu2WE2VN3MN/exec"));
         randomId = Random.Range(1,905);
         StartCoroutine(GetRequest("https://pokeapi.co/api/v2/pokemon/" + randomId));
-
-
     }
     IEnumerator GetRequest(string uri)
     {
@@ -116,7 +113,6 @@ public class simpleRequests : MonoBehaviour
                 case UnityWebRequest.Result.Success:
                     //Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
                     JSONNode root = JSONNode.Parse(webRequest.downloadHandler.text);
-
 
                     tmp_pName.text = root["name"];
                     tmp_pHeight.text = root["height"];
@@ -229,21 +225,6 @@ public class simpleRequests : MonoBehaviour
                         pTexture = ((DownloadHandlerTexture)imgRequest.downloadHandler).texture;
                         pSprite.texture = pTexture;
                     }
-
-                    // UnityWebRequest www = UnityWebRequestTexture.GetTexture(pokeImage);
-                    // yield return www.SendWebRequest();
-
-                    // if (www.result != UnityWebRequest.Result.Success)
-                    // {
-                    //     Debug.Log(www.error);
-                    // }
-                    // else
-                    // {
-                    //     Texture myTexture = ((DownloadHandlerTexture)www.downloadHandler).texture;
-                    //     Debug.Log("Si se pudo");
-                    //     Image1.texture = myTexture;
-                    // }
- 
                     break;
             }
         }
