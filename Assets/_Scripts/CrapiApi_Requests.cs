@@ -1,83 +1,124 @@
+using System;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
-using Newtonsoft.Json.Serialization;
 using SimpleJSON;
+
+[Serializable] public class ToDoTask
+{
+    public int id;
+    public string name;
+    public bool isComplete;
+}
 public class CrapiApi_Requests : MonoBehaviour
 {
-    
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private int taskId;
+
+    [SerializeField] private string taskName;
+
+    [SerializeField] private bool taskComplete;
+    private void Start()
     {
-            DoRequest();
+        ToDoTask myTask = new ToDoTask();
+        myTask.id = taskId;
+        myTask.name= taskName;
+        myTask.isComplete = taskComplete;
+        
+        DoPost(myTask);
     }
-    void DoRequest()
+
+    public void DoGet()
     {
         StopAllCoroutines();
-        StartCoroutine(CorPostRequest("https://localhost:7114/api/todoitems"));
+        StartCoroutine(CorGetRequest("https://localhost:7114/api/todoitems"));
+    }
+    public void DoPost(ToDoTask aTask)
+    {
+        StopAllCoroutines();
+        StartCoroutine(CorPostRequest("https://localhost:7114/api/todoitems", aTask));
         
-        // StartCoroutine(CorGetRequest("https://localhost:7114/api/todoitems"));
+    }  
+    public void DoDelete(int aId)
+    {
+        StopAllCoroutines();
+        StartCoroutine(CorDeleteRequest("https://localhost:7114/api/todoitems", aId));
+        
     }
     
-    IEnumerator CorGetRequest(string Uri)
+    private IEnumerator CorGetRequest(string aUri)
     {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(Uri))
+        using (UnityWebRequest getRequest = UnityWebRequest.Get(aUri))
         {
             //make request and wait    
-            yield return webRequest.SendWebRequest();
-            Debug.Log("Sending Request to " + Uri);
-            string[] pages = Uri.Split('/');
+            yield return getRequest.SendWebRequest();
+            Debug.Log("Sending Request to " + aUri);
+            string[] pages = aUri.Split('/');
             int page = pages.Length - 1;
-            switch (webRequest.result)
+            switch (getRequest.result)
             {
                 case UnityWebRequest.Result.ConnectionError:
                 case UnityWebRequest.Result.DataProcessingError:
-                    Debug.LogError(pages[page] + ": Error: " + webRequest.error);
+                    Debug.LogError(pages[page] + ": Error: " + getRequest.error);
                     break;
                 case UnityWebRequest.Result.ProtocolError:
-                    Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
+                    Debug.LogError(pages[page] + ": HTTP Error: " + getRequest.error);
                     break;
                 case UnityWebRequest.Result.Success:
-                    JSONNode root = JSONNode.Parse(webRequest.downloadHandler.text);
+                    JSONNode root = JSONNode.Parse(getRequest.downloadHandler.text);
                     Debug.Log(root.ToString());
                     break;
             }
+            getRequest.Dispose();
         }
     }
 
-    IEnumerator CorPostRequest(string Uri)
+    private IEnumerator CorPostRequest(string aUri, ToDoTask aTask)
     {
-        WWWForm form = new WWWForm();
-        //form.headers["Content-Type"]= "application/json";
-        var info = "{Name:lalo,IsComplete:true}";
-        var json = System.Text.Encoding.UTF8.GetBytes(info);
-        // foreach (var item in form.headers)
-        // {
-        //     Debug.Log(item);
-        // }
-        // form.headers"Content-Type", "application/json");
-        // form.AddField("Id", 0);
-        form.AddField("Name", "toDoItem0");
-        form.AddField("Name", "false");
         
-        using (UnityWebRequest webPost = UnityWebRequest.Post(Uri,form))
+        string json = JsonUtility.ToJson(aTask);
+        Debug.Log(json);
+        
+        UnityWebRequest postRequest = UnityWebRequest.Put(aUri, json);
+        postRequest.method = "POST";
+        postRequest.SetRequestHeader("Content-Type", "Application/json");
+        yield return postRequest.SendWebRequest();
+        
+        switch (postRequest.result)
         {
-            webPost.SetRequestHeader("Content-Type","application/json");
-            yield return webPost.SendWebRequest();
-            switch (webPost.result)
-            {
-                case UnityWebRequest.Result.ConnectionError:
-                case UnityWebRequest.Result.DataProcessingError:
-                    Debug.LogError(": Error: " + webPost.error);
-                    break;
-                case UnityWebRequest.Result.ProtocolError:
-                    Debug.LogError(": HTTP Error: " + webPost.error);
-                    break;
-                case UnityWebRequest.Result.Success:
-                    Debug.Log("Post Success");
-                    break;
-            }
+            case UnityWebRequest.Result.ConnectionError:
+            case UnityWebRequest.Result.DataProcessingError:
+                Debug.LogError(": Error: " + postRequest.error);
+                break;
+            case UnityWebRequest.Result.ProtocolError:
+                Debug.LogError(": HTTP Error: " + postRequest.error);
+                break;
+            case UnityWebRequest.Result.Success:
+                Debug.Log("Post Success");
+                break;
         }
-        
+        postRequest.Dispose();
     }
+
+    private IEnumerator CorDeleteRequest(string aUri, int aId)
+    {
+        UnityWebRequest deleteRequest = UnityWebRequest.Delete(aUri + "/" + aId.ToString());
+        yield return deleteRequest.SendWebRequest();
+        switch (deleteRequest.result)
+        {
+            case UnityWebRequest.Result.ConnectionError:
+            case UnityWebRequest.Result.DataProcessingError:
+                Debug.LogError(": Error: " + deleteRequest.error);
+                break;
+            case UnityWebRequest.Result.ProtocolError:
+                Debug.LogError(": HTTP Error: " + deleteRequest.error);
+                break;
+            case UnityWebRequest.Result.Success:
+                Debug.Log("Delete Success");
+                break;
+        }
+        deleteRequest.Dispose();
+    }
+    
+    // private IEnumerator CorPutRequest(string aUri, )
 }
+
