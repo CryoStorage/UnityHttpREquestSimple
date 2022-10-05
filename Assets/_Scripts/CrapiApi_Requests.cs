@@ -30,18 +30,18 @@ public class CrapiApi_Requests : MonoBehaviour
     public void DoGet()
     {
         StopAllCoroutines();
-        StartCoroutine(CorGetRequest("https://localhost:7114/api/todoitems"));
+        StartCoroutine(CorGetRequest("https://localhost:7114/api/Player"));
     }
     public void DoPost(ToDoTask aTask)
     {
         StopAllCoroutines();
-        StartCoroutine(CorPostRequest("https://localhost:7114/api/todoitems", aTask));
+        StartCoroutine(CorPostRequest("https://localhost:7114/api/Player", aTask));
         
     }  
     public void DoDelete(int aId)
     {
         StopAllCoroutines();
-        StartCoroutine(CorDeleteRequest("https://localhost:7114/api/todoitems", aId));
+        StartCoroutine(CorDeleteRequest("https://localhost:7114/api/Player", aId));
         
     }
     
@@ -101,24 +101,43 @@ public class CrapiApi_Requests : MonoBehaviour
 
     private IEnumerator CorDeleteRequest(string aUri, int aId)
     {
-        UnityWebRequest deleteRequest = UnityWebRequest.Delete(aUri + "/" + aId.ToString());
-        yield return deleteRequest.SendWebRequest();
-        switch (deleteRequest.result)
+        UnityWebRequest putRequest = UnityWebRequest.Delete(aUri + "/" + aId.ToString());
+        yield return putRequest.SendWebRequest();
+        switch (putRequest.result)
         {
             case UnityWebRequest.Result.ConnectionError:
             case UnityWebRequest.Result.DataProcessingError:
-                Debug.LogError(": Error: " + deleteRequest.error);
+                Debug.LogError(": Error: " + putRequest.error);
                 break;
             case UnityWebRequest.Result.ProtocolError:
-                Debug.LogError(": HTTP Error: " + deleteRequest.error);
+                Debug.LogError(": HTTP Error: " + putRequest.error);
                 break;
             case UnityWebRequest.Result.Success:
                 Debug.Log("Delete Success");
                 break;
         }
-        deleteRequest.Dispose();
+        putRequest.Dispose();
     }
-    
-    // private IEnumerator CorPutRequest(string aUri, )
+
+    private IEnumerator CorPutRequest(string aUri, int aId)
+    {
+        UnityWebRequest putRequest = UnityWebRequest.Put(aUri + "/" , aId.ToString());
+        yield return putRequest.SendWebRequest();
+        switch (putRequest.result)
+        {
+            case UnityWebRequest.Result.ConnectionError:
+            case UnityWebRequest.Result.DataProcessingError:
+                Debug.LogError(": Error: " + putRequest.error);
+                break;
+            case UnityWebRequest.Result.ProtocolError:
+                Debug.LogError(": HTTP Error: " + putRequest.error);
+                break;
+            case UnityWebRequest.Result.Success:
+                Debug.Log("Delete Success");
+                break;
+        }
+        putRequest.Dispose();
+        
+    }
 }
 

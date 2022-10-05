@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2495aa08df5158e4f8b8e6f42cf50193, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  taskId: 3
-  taskName: TestTask2
+  taskId: 0
+  taskName: TestTask1
   taskComplete: 1
 --- !u!4 &43093532
 Transform:
