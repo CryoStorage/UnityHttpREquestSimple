@@ -4,45 +4,81 @@ using UnityEngine.Networking;
 using System.Collections;
 using SimpleJSON;
 
-[Serializable] public class ToDoTask
+[Serializable] public class Player
 {
-    public int id;
-    public string name;
-    public bool isComplete;
+    public long Id;
+    public int Jumps;
+    public int Wins;
+    public int Deaths;
+    public int OrbsCollected;
+    public int OrbsSpent;
+    public int AdsWatched;
+    public long PlayTime;
+    public long AvgPlaySession;
+    public long DistanceClimbed;
+    public long DistanceFallen;
+
 }
 public class CrapiApi_Requests : MonoBehaviour
 {
-    [SerializeField] private int taskId;
-
-    [SerializeField] private string taskName;
-
-    [SerializeField] private bool taskComplete;
-    private void Start()
+    [Header("host URI")] [SerializeField] private string uri = "https://localhost:7114/api/Player";
+    [Header("Player")]
+    [SerializeField] private long id;
+    [SerializeField] private int jumps;
+    [SerializeField] private int wins;
+    [SerializeField] private int deaths;
+    [SerializeField] private int orbsCollected;
+    [SerializeField] private int orbsSpent;
+    [SerializeField] private int adsWatched;
+    [SerializeField] private long playTime;
+    [SerializeField] private long avgPlaySession;
+    [SerializeField] private long distanceClimbed;
+    [SerializeField] private long distanceFallen;
+    
+    private Player _player = new Player();
+    
+    private void BuildPlayer()
     {
-        ToDoTask myTask = new ToDoTask();
-        myTask.id = taskId;
-        myTask.name= taskName;
-        myTask.isComplete = taskComplete;
+        _player = new Player();
+        _player.Id = id;
+        _player.Jumps = jumps;
+        _player.Wins = wins;
+        _player.Deaths = deaths;
+        _player.OrbsCollected = orbsCollected;
+        _player.OrbsSpent = orbsSpent;
+        _player.AdsWatched = adsWatched;
+        _player.PlayTime = playTime;
+        _player.AvgPlaySession = avgPlaySession;
+        _player.DistanceClimbed = distanceClimbed;
+        _player.DistanceFallen = distanceFallen;
+    }
+
+    private void BuildJson(Player aPlayer)
+    {
         
-        DoPost(myTask);
+        
     }
 
     public void DoGet()
     {
         StopAllCoroutines();
-        StartCoroutine(CorGetRequest("https://localhost:7114/api/Player"));
+        StartCoroutine(CorGetRequest(uri));
     }
-    public void DoPost(ToDoTask aTask)
+    public void DoPost(Player aTask)
     {
         StopAllCoroutines();
-        StartCoroutine(CorPostRequest("https://localhost:7114/api/Player", aTask));
-        
+        StartCoroutine(CorPostRequest(uri, aTask));
     }  
     public void DoDelete(int aId)
     {
         StopAllCoroutines();
-        StartCoroutine(CorDeleteRequest("https://localhost:7114/api/Player", aId));
-        
+        StartCoroutine(CorDeleteRequest(uri, aId));
+    }
+    public void DoPut()
+    {
+        StopAllCoroutines();
+        // StartCoroutine(CorPutRequest(uri,));
+
     }
     
     private IEnumerator CorGetRequest(string aUri)
@@ -72,15 +108,15 @@ public class CrapiApi_Requests : MonoBehaviour
         }
     }
 
-    private IEnumerator CorPostRequest(string aUri, ToDoTask aTask)
+    private IEnumerator CorPostRequest(string aUri, Player aTask)
     {
-        
         string json = JsonUtility.ToJson(aTask);
         Debug.Log(json);
         
         UnityWebRequest postRequest = UnityWebRequest.Put(aUri, json);
         postRequest.method = "POST";
         postRequest.SetRequestHeader("Content-Type", "Application/json");
+        //make request and wait    
         yield return postRequest.SendWebRequest();
         
         switch (postRequest.result)
@@ -102,6 +138,7 @@ public class CrapiApi_Requests : MonoBehaviour
     private IEnumerator CorDeleteRequest(string aUri, int aId)
     {
         UnityWebRequest putRequest = UnityWebRequest.Delete(aUri + "/" + aId.ToString());
+        //make request and wait    
         yield return putRequest.SendWebRequest();
         switch (putRequest.result)
         {
@@ -122,6 +159,7 @@ public class CrapiApi_Requests : MonoBehaviour
     private IEnumerator CorPutRequest(string aUri, int aId)
     {
         UnityWebRequest putRequest = UnityWebRequest.Put(aUri + "/" , aId.ToString());
+        //make request and wait    
         yield return putRequest.SendWebRequest();
         switch (putRequest.result)
         {
@@ -137,7 +175,6 @@ public class CrapiApi_Requests : MonoBehaviour
                 break;
         }
         putRequest.Dispose();
-        
     }
 }
 
