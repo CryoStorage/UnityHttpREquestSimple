@@ -6,7 +6,7 @@ using SimpleJSON;
 
 [Serializable] public class Player
 {
-    public long Id;
+    public int Id;
     public int Jumps;
     public int Wins;
     public int Deaths;
@@ -23,7 +23,7 @@ public class CrapiApi_Requests : MonoBehaviour
 {
     [Header("host URI")] [SerializeField] private string uri = "https://localhost:7114/api/Player";
     [Header("Player")]
-    [SerializeField] private long id;
+    [SerializeField] private int id;
     [SerializeField] private int jumps;
     [SerializeField] private int wins;
     [SerializeField] private int deaths;
@@ -53,10 +53,9 @@ public class CrapiApi_Requests : MonoBehaviour
         _player.DistanceFallen = distanceFallen;
     }
 
-    private void BuildJson(Player aPlayer)
+    private void Start()
     {
-        
-        
+        BuildPlayer();
     }
 
     public void DoGet()
@@ -64,21 +63,20 @@ public class CrapiApi_Requests : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(CorGetRequest(uri));
     }
-    public void DoPost(Player aTask)
+    public void DoPost()
     {
         StopAllCoroutines();
-        StartCoroutine(CorPostRequest(uri, aTask));
+        StartCoroutine(CorPostRequest(uri, _player));
     }  
-    public void DoDelete(int aId)
+    public void DoDelete()
     {
         StopAllCoroutines();
-        StartCoroutine(CorDeleteRequest(uri, aId));
+        StartCoroutine(CorDeleteRequest(uri, id));
     }
     public void DoPut()
     {
         StopAllCoroutines();
-        // StartCoroutine(CorPutRequest(uri,));
-
+        StartCoroutine(CorPutRequest(uri, _player));
     }
     
     private IEnumerator CorGetRequest(string aUri)
@@ -137,7 +135,7 @@ public class CrapiApi_Requests : MonoBehaviour
 
     private IEnumerator CorDeleteRequest(string aUri, int aId)
     {
-        UnityWebRequest putRequest = UnityWebRequest.Delete(aUri + "/" + aId.ToString());
+        UnityWebRequest putRequest = UnityWebRequest.Delete(aUri + "/" + aId);
         //make request and wait    
         yield return putRequest.SendWebRequest();
         switch (putRequest.result)
@@ -156,9 +154,11 @@ public class CrapiApi_Requests : MonoBehaviour
         putRequest.Dispose();
     }
 
-    private IEnumerator CorPutRequest(string aUri, int aId)
+    private IEnumerator CorPutRequest(string aUri, Player aPlayer)
     {
-        UnityWebRequest putRequest = UnityWebRequest.Put(aUri + "/" , aId.ToString());
+        string playerJson = JsonUtility.ToJson(aPlayer);
+        UnityWebRequest putRequest = UnityWebRequest.Put(aUri + "/" + _player.Id, playerJson);
+        putRequest.SetRequestHeader("Content-Type", "application/json");
         //make request and wait    
         yield return putRequest.SendWebRequest();
         switch (putRequest.result)
@@ -171,7 +171,7 @@ public class CrapiApi_Requests : MonoBehaviour
                 Debug.LogError(": HTTP Error: " + putRequest.error);
                 break;
             case UnityWebRequest.Result.Success:
-                Debug.Log("Delete Success");
+                Debug.Log("Put Success");
                 break;
         }
         putRequest.Dispose();
