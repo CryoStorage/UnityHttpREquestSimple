@@ -63,6 +63,12 @@ public class CrapiApi_Requests : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(CorGetRequest(uri));
     }
+
+    public void GetPlayer()
+    {
+        StopAllCoroutines();
+        
+    }
     public void DoPost()
     {
         StopAllCoroutines();
@@ -99,6 +105,39 @@ public class CrapiApi_Requests : MonoBehaviour
                     break;
                 case UnityWebRequest.Result.Success:
                     JSONNode root = JSONNode.Parse(getRequest.downloadHandler.text);
+                    Debug.Log(root.ToString());
+                    break;
+            }
+            getRequest.Dispose();
+        }
+    }    
+    private IEnumerator CorGetPlayer(string aUri, int aId)
+    {
+        using (UnityWebRequest getRequest = UnityWebRequest.Get(aUri + "/" + aId))
+        {
+            //make request and wait    
+            yield return getRequest.SendWebRequest();
+            Debug.Log("Sending Request to " + aUri);
+            string[] pages = aUri.Split('/');
+            int page = pages.Length - 1;
+            switch (getRequest.result)
+            {
+                case UnityWebRequest.Result.ConnectionError:
+                case UnityWebRequest.Result.DataProcessingError:
+                    Debug.LogError(pages[page] + ": Error: " + getRequest.error);
+                    break;
+                case UnityWebRequest.Result.ProtocolError:
+                    Debug.LogError(pages[page] + ": HTTP Error: " + getRequest.error);
+                    break;
+                case UnityWebRequest.Result.Success:
+                    JSONNode root = JSONNode.Parse(getRequest.downloadHandler.text);
+                    foreach (var item in root)
+                    {
+                        if (item.Value[id] == aId)
+                        {
+                            
+                        }
+                    }
                     Debug.Log(root.ToString());
                     break;
             }
