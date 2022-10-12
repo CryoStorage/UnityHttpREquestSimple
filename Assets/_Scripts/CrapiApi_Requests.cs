@@ -22,6 +22,8 @@ using SimpleJSON;
 public class CrapiApi_Requests : MonoBehaviour
 {
     [Header("host URI")] [SerializeField] private string uri = "https://localhost:7114/api/Player";
+    [Header("ViewHandler")] 
+    [SerializeField]private PlayerViewHandler handler;
     [Header("Player")]
     [SerializeField] private int id;
     [SerializeField] private int jumps;
@@ -67,7 +69,8 @@ public class CrapiApi_Requests : MonoBehaviour
     public void GetPlayer()
     {
         StopAllCoroutines();
-        
+        StartCoroutine(CorGetPlayer(uri,id));
+
     }
     public void DoPost()
     {
@@ -135,7 +138,19 @@ public class CrapiApi_Requests : MonoBehaviour
                     {
                         if (item.Value[id] == aId)
                         {
-                            
+                            Player builtPlayer = new Player();
+                            builtPlayer.Id = root["Id"];
+                            builtPlayer.Jumps = root["Jumps"];
+                            builtPlayer.Wins = root["Wins"];
+                            builtPlayer.Deaths = root["Deaths"];
+                            builtPlayer.OrbsCollected = root["OrbsCollected"];
+                            builtPlayer.AdsWatched = root["AdsWatched"];
+                            builtPlayer.PlayTime = root["PlayTime"];
+                            builtPlayer.AvgPlaySession = root["AvgPlaySession"];
+                            builtPlayer.DistanceClimbed = root["DistanceClimbed"];
+                            builtPlayer.DistanceFallen = root["DistanceFallen"];
+                            handler.UpdateView(builtPlayer);
+                            Debug.Log("UpdatedView");
                         }
                     }
                     Debug.Log(root.ToString());
